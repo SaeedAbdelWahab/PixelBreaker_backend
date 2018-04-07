@@ -51,3 +51,13 @@ class Logout(APIView) :
     def get(self, request):
         logout(request)
         return Response({"valid": True}, status=status.HTTP_200_OK)
+
+class test(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication) #use this line for every api tht uses self.request.user
+    def post(self, request):
+        user = self.request.user #get the user object which contains the email and id and other attributes of currently logged in user
+        if not self.request.user.is_anonymous : 
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED )
+        else : 
+            return Response({"valid":False}, status=status.HTTP_400_BAD_REQUEST)        
