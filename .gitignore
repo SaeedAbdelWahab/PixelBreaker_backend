@@ -1,0 +1,5 @@
+db.sqlite3
+backend/__pycache__
+PixelBreaker/__pycache__
+PixelBreaker/migrations
+!PixelBreaker/migrations/__init__.py
