@@ -22,10 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '63(%ya^pl3_1o@y)gl5+2peau)$)-_90%enu!y4b1_ru4!td07'
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','192.168.1.11']
+ALLOWED_HOSTS = ['localhost','192.168.1.11','192.168.1.36']
 
 
 # Application definition

@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
+from drf_extra_fields.fields import Base64ImageField
+from .models import *
+
 
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
@@ -17,3 +20,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password')
+
+
+class ImageDetailsSerializer(serializers.ModelSerializer):
+    image = Base64ImageField() 
+    class Meta:
+        model = ImageDetails
+        fields = '__all__'

@@ -7,6 +7,10 @@ from rest_framework import status
 from .serializers import UserSerializer
 from django.contrib.auth.models import User
 from .csrf_ignore import CsrfExemptSessionAuthentication,BasicAuthentication
+from .serializers import *
+from .models import *
+from rest_framework.exceptions import ValidationError
+from rest_framework import generics
 
 class Register(APIView):
     """ 
@@ -61,3 +65,29 @@ class test(APIView):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED )
         else : 
             return Response({"valid":False}, status=status.HTTP_400_BAD_REQUEST)        
+
+class ImageDetailsView(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    def post(self,request,format=None) :
+        data = request.data
+        serializer_class = ImageDetailsSerializer(data=data)
+        if serializer_class.is_valid():
+		#	serializer.create(validated_data=serializer.validated_data)
+            serializer_class.save()
+            return Response({'valid':True,'errors':'null'}, status=status.HTTP_201_CREATED)
+        return Response({'valid':False ,'errors':serializer_class.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class ImageDetailsView(generics.ListCreateAPIView):
+#     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+#     queryset = ImageDetails.objects.all()
+#     serializer_class = ImageDetailsSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         if not serializer.is_valid():
+#             print(serializer.errors) # or better use logging if it's configured
+#             raise ValidationError(serialize.errors)
+#         self.perform_create(serializer)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
