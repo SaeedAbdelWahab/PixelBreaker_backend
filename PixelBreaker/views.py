@@ -11,6 +11,7 @@ from .serializers import *
 from .models import *
 from rest_framework.exceptions import ValidationError
 from rest_framework import generics
+import cv2
 
 class Register(APIView):
     """ 
@@ -39,8 +40,9 @@ class Login(APIView):
         if user:
             login(request, user)
             serializer = UserSerializer(user)
-            x = self.request.user  ## To send the user status in the state with the response ##
-            data = {"valid": True, "errors": ""}
+            x = self.request.user.id  ## To send the user status in the state with the response ##
+            p = User.objects.get(id=x)
+            data = {"valid": True,"staff":p.is_staff, "errors": ""}
             return Response(data, status=status.HTTP_202_ACCEPTED )
         ###### If the User isn't valid ######
         if not user:
@@ -70,11 +72,19 @@ class ImageDetailsView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def post(self,request,format=None) :
         data = request.data
+        
         serializer_class = ImageDetailsSerializer(data=data)
         if serializer_class.is_valid():
-		#	serializer.create(validated_data=serializer.validated_data)
-            serializer_class.save()
-            return Response({'valid':True,'errors':'null'}, status=status.HTTP_201_CREATED)
+            obj = serializer_class.save()
+            
+            path = str(obj.image)
+            # img = cv2.imread(path)
+            # cv2.imshow('roma',img)
+            # cv2.waitKey(0)
+            # data = ImageDetailsSerializer(obj.data)
+            # print (serializer_class.validated_data['number'])
+            print (path)
+            return Response({'path':path}, status=status.HTTP_201_CREATED)
         return Response({'valid':False ,'errors':serializer_class.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
