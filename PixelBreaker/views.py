@@ -76,31 +76,30 @@ class test(APIView):
 class ImageDetailsView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def post(self,request,format=None) :
-        data = request.data
-        
+        data = request.data      
         serializer_class = ImageDetailsSerializer(data=data)
         if serializer_class.is_valid():
             obj = serializer_class.save()   
             path = str(obj.image)
+            id = obj.id
             print (path)
             preprocess(path)
             digits,img = detect_digits('test.bmp')
             cv2.imwrite(path+'_processes',img)
             reading = ''.join(str(x) for x in digits)
+            im = ImageDetails.objects.get(id=id)
+            im.reading=reading
+            im.save()
             return Response({'path':path,'reading':reading}, status=status.HTTP_201_CREATED)
         return Response({'valid':False ,'errors':serializer_class.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class ImageDetailsView(generics.ListCreateAPIView):
-#     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-#     queryset = ImageDetails.objects.all()
-#     serializer_class = ImageDetailsSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         if not serializer.is_valid():
-#             print(serializer.errors) # or better use logging if it's configured
-#             raise ValidationError(serialize.errors)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers(serializer.data)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+class  CustomerView(APIView) :
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    def get(self,request,number) :
+        images = ImageDetails.objects.filter(number=number)
+        if (images) :
+            serializer = ImageDetailsSerializer(images,many=True)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        else : 
+            return Response({'valid':False}, status=status.HTTP_400_BAD_REQUEST)    
