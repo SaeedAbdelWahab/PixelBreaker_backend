@@ -4,4 +4,5 @@ from django.db import models
 
 class ImageDetails(models.Model) :
     number= models.IntegerField()
-    image = models.FileField(upload_to='images/cover_photos/', blank=True, null=True)
+    image = models.FileField(upload_to='images/MeterReadings/', blank=True, null=True)
+    date = models.DateField(auto_now=True)

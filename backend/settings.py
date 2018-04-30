@@ -26,7 +26,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','192.168.1.11','192.168.1.36','192.168.1.5']
+ALLOWED_HOSTS = ['localhost','192.168.1.11','192.168.1.36','192.168.1.5','192.168.1.3']
 
 
 # Application definition
