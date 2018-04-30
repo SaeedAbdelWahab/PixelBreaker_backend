@@ -4,3 +4,6 @@ PixelBreaker/__pycache__
 PixelBreaker/migrations
 !PixelBreaker/migrations/__init__.py
 images/
+Detection/__pycache__/__init__.cpython-34.pyc
+resizeimg.jpg
+test.bmp

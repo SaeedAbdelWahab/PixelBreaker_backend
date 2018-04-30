@@ -7,4 +7,7 @@ import argparse
 
 
 preprocess('addad1.jpg')
-detect_digits('test.bmp')
+x ,y = detect_digits('test.bmp')
+print (x[0])
+cv2.imshow('test',y)
+cv2.waitKey(0)

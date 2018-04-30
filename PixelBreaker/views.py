@@ -11,7 +11,12 @@ from .serializers import *
 from .models import *
 from rest_framework.exceptions import ValidationError
 from rest_framework import generics
+from Detection.ssocr import *
+from Detection.ImageProject import *
 import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import argparse
 
 class Register(APIView):
     """ 
@@ -75,16 +80,14 @@ class ImageDetailsView(APIView):
         
         serializer_class = ImageDetailsSerializer(data=data)
         if serializer_class.is_valid():
-            obj = serializer_class.save()
-            
+            obj = serializer_class.save()   
             path = str(obj.image)
-            # img = cv2.imread(path)
-            # cv2.imshow('roma',img)
-            # cv2.waitKey(0)
-            # data = ImageDetailsSerializer(obj.data)
-            # print (serializer_class.validated_data['number'])
             print (path)
-            return Response({'path':path}, status=status.HTTP_201_CREATED)
+            preprocess(path)
+            digits,img = detect_digits('test.bmp')
+            cv2.imwrite(path+'_processes',img)
+            reading = ''.join(str(x) for x in digits)
+            return Response({'path':path,'reading':reading}, status=status.HTTP_201_CREATED)
         return Response({'valid':False ,'errors':serializer_class.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 

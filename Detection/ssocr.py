@@ -193,9 +193,6 @@ def detect_digits(img_path):
     dst = preprocess(blurred, THRESHOLD)
     digits_positions = find_digits_positions(dst)
     digits = recognize_digits_line_method(digits_positions, output, dst)  
-    cv2.imshow('output', output)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    print(digits)
+    return digits,output
 
 
